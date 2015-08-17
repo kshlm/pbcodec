@@ -11,12 +11,8 @@ func WriteRpc(w io.Writer, data []byte) (int, error) {
 	sizebuf := make([]byte, 8)
 	binary.BigEndian.PutUint64(sizebuf, uint64(len(data)))
 
-	n, err := w.Write(sizebuf)
-	if err != nil {
-		return n, err
-	}
-
-	return w.Write(data)
+	buf := append(sizebuf, data...)
+	return w.Write(buf)
 }
 
 func ReadRpc(r io.Reader) ([]byte, error) {
